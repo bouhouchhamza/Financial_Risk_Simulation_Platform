@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FraudDetectionService;
-use Illuminate\Http\Request;
 use App\Models\Startup;
+use App\Services\FraudAnalysisService;
+use Illuminate\View\View;
 
-class FraudDetectionController  extends Controller
+class FraudDetectionController extends Controller
 {
-    public function show(Startup $startup, FraudDetectionService $fraudDetectionService){
-        abort_unless($startup->user_id === auth()->id(),403);
-        $result = $fraudDetectionService->analyze($startup);
-        return response()->json($result);
+    public function show(Startup $startup, FraudAnalysisService $fraudAnalysisService): View
+    {
+        abort_unless($startup->user_id === auth()->id(), 403);
+
+        $result = $fraudAnalysisService->runForStartup($startup);
+
+        return view('fraud_detection.show', compact('startup', 'result'));
     }
 }
