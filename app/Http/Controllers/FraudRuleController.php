@@ -22,7 +22,7 @@ class FraudRuleController extends Controller
         $rule = FraudRule::findOrFail($id);
         return view('fraud_rules.edit', compact('rule'));
     }
-    public function update(Request $request, $id, Rule $rule)
+    public function update(Request $request, $id)
     {
         abort_unless(auth()->user()->isAdmin(), 403);
         $rule = FraudRule::findOrFail($id);
