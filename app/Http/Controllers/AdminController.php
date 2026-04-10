@@ -11,7 +11,6 @@ class AdminController extends Controller
     {
         try {
             $totalUsers = User::count();
-            // Assuming following models exist or we mock them
             $totalStartups = class_exists(\App\Models\Startup::class) ? \App\Models\Startup::count() : 0;
             $totalTxns = class_exists(\App\Models\Transaction::class) ? \App\Models\Transaction::count() : 0;
             $totalAlerts = class_exists(\App\Models\Alert::class) ? \App\Models\Alert::count() : 0;

@@ -11,14 +11,21 @@ class DashboardController extends Controller
         private readonly DashboardService $dashboardService
     ) {}
 
-    public function index(): View
-    {
-        $startup = auth()->user()?->startup;
-        $summary = $this->dashboardService->summarizeForStartup($startup);
+   public function index(): View|\Illuminate\Http\RedirectResponse
+{
+    $user = auth()->user();
 
-        return view('dashboard', array_merge(
-            ['startup' => $startup],
-            $summary
-        ));
+    if ($user && $user->isAdmin()) {
+        return redirect()->route('admin.dashboard');
     }
+
+
+    $startup = $user?->startup;
+    $summary = $this->dashboardService->summarizeForStartup($startup);
+
+    return view('dashboard', array_merge(
+        ['startup' => $startup],
+        $summary
+    ));
+}
 }
