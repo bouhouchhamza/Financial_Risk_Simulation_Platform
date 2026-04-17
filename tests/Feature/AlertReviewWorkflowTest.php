@@ -7,16 +7,21 @@ use Tests\TestCase;
 use App\Models\Alert;
 use App\Models\Startup;
 use App\Models\User;
+use App\Models\Role;
 
 
 class AlertReviewWorkflowTest extends TestCase
 {
     use RefreshDatabase;
-    private function createUserWithStartup(): array
+    private function createAdminWithStartup(): array
     {
-        $user = User::factory()->create();
+        $admin = User::factory()->create();
+        $adminRole = Role::firstOrCreate([
+            'name' => 'admin',
+        ]);
+        $admin->roles()->attach($adminRole->id);
         $startup = Startup::create([
-            'user_id' => $user->id,
+            'user_id' => $admin->id,
             'name' => 'Test Startup',
             'activity_type' => 'Fintech',
             'initial_budget' => 10000,
@@ -24,7 +29,7 @@ class AlertReviewWorkflowTest extends TestCase
             'monthly_expenses' => 3000,
             'employees_count' => 5,
         ]);
-        return [$user, $startup];
+        return [$admin, $startup];
     }
     private function createAlert(Startup $startup):Alert
     {
@@ -38,61 +43,61 @@ class AlertReviewWorkflowTest extends TestCase
         ]);
     }
 
-    public function test_can_approve_alert(): void
+    public function test_admin_can_approve_alert(): void
     {
-        [$user, $startup] = $this->createUserWithStartup();
+        [$admin, $startup] = $this->createAdminWithStartup();
         $alert = $this->createAlert($startup);
 
-        $response = $this->actingAs($user)->patch(route('alerts.approve', $alert->id));
-        $response->assertRedirect(route('alerts.index'));
+        $response = $this->actingAs($admin)->patch(route('admin.alerts.approve', $alert->id));
+        $response->assertRedirect(route('admin.alerts.index'));
         $alert->refresh();
 
         $this->assertEquals('reviewed', $alert->status);
         $this->assertEquals('approved', $alert->review_status);
-        $this->assertEquals($user->id, $alert->reviewed_by);
+        $this->assertEquals($admin->id, $alert->reviewed_by);
         $this->assertNotNull($alert->reviewed_at);
     }
 
-    public function test_user_can_reject_alert(): void
+    public function test_admin_can_reject_alert(): void
     {
-        [$user, $startup] = $this->createUserWithStartup();
+        [$admin, $startup] = $this->createAdminWithStartup();
         $alert = $this->createAlert($startup);
-        $response = $this->actingAs($user)->patch(route('alerts.reject', $alert->id));
+        $response = $this->actingAs($admin)->patch(route('admin.alerts.reject', $alert->id));
 
-        $response->assertRedirect(route('alerts.index'));
+        $response->assertRedirect(route('admin.alerts.index'));
         $alert->refresh();
         $this->assertEquals('reviewed', $alert->status);
         $this->assertEquals('rejected', $alert->review_status);
-        $this->assertEquals($user->id, $alert->reviewed_by);
+        $this->assertEquals($admin->id, $alert->reviewed_by);
         $this->assertNotNull($alert->reviewed_at);
     }
-    public function test_user_can_confirm_fraud_alert(): void
+    public function test_admin_can_confirm_fraud_alert(): void
     {
-        [$user, $startup] = $this->createUserWithStartup();
+        [$admin, $startup] = $this->createAdminWithStartup();
         $alert = $this->createAlert($startup);
-        $response = $this->actingAs($user)->patch(route('alerts.confirmFraud', $alert->id));
-        $response->assertRedirect(route('alerts.index'));
+        $response = $this->actingAs($admin)->patch(route('admin.alerts.confirmFraud', $alert->id));
+        $response->assertRedirect(route('admin.alerts.index'));
         $alert->refresh();
 
         $this->assertEquals('resolved', $alert->status);
         $this->assertEquals('confirmed_fraud', $alert->review_status);
-        $this->assertEquals($user->id, $alert->reviewed_by);
+        $this->assertEquals($admin->id, $alert->reviewed_by);
         $this->assertNotNull($alert->reviewed_at);
     }
 
-    public function test_user_can_mark_alert_as_false_positive(): void
+    public function test_admin_can_mark_alert_as_false_positive(): void
     {
-        [$user, $startup] = $this->createUserWithStartup();
+        [$admin, $startup] = $this->createAdminWithStartup();
         $alert = $this->createAlert($startup);
 
-        $response = $this->actingAs($user)->patch(route('alerts.markFalsePositive', $alert->id));
+        $response = $this->actingAs($admin)->patch(route('admin.alerts.markFalsePositive', $alert->id));
 
-        $response->assertRedirect(route('alerts.index'));
+        $response->assertRedirect(route('admin.alerts.index'));
         $alert->refresh();
 
         $this->assertEquals('resolved', $alert->status);
         $this->assertEquals('false_positive', $alert->review_status);
-        $this->assertEquals($user->id, $alert->reviewed_by);
+        $this->assertEquals($admin->id, $alert->reviewed_by);
         $this->assertNotNull($alert->reviewed_at);
     }
 }

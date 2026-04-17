@@ -10,7 +10,10 @@
     </div>
     <div class="page-actions">
         @if(isset($startup))
-            <a href="{{ route('fraud.show', $startup->id) }}" class="btn btn-primary" data-loading-link data-loading-text="Analyzing...">Run Fraud Detection</a>
+        <form method="POST" action="{{ route('fraud-detection.run', $startup->id) }}" class="inline-form">
+            @csrf
+            <button type="submit" class="btn btn-primary" data-loading-text="Analyzing...">Run Fraud Detection</button>
+        </form>
         @endif
     </div>
 </div>
@@ -37,46 +40,59 @@
             </thead>
             <tbody>
                 @forelse($alerts as $alert)
-                    <tr class="{{ strtolower((string) $alert->severity) === 'high' ? 'row-danger' : '' }}">
-                        <td>#{{ $alert->id }}</td>
-                        <td>{{ $alert->rule_code ?: $alert->type }}</td>
-                        <td>{{ $alert->message }}</td>
-                        <td>
-                            @php
-                                $severityClass = match (strtolower($alert->severity)) {
-                                    'high' => 'badge-high',
-                                    'medium' => 'badge-medium',
-                                    default => 'badge-low',
-                                };
-                            @endphp
-                            <span class="badge {{ $severityClass }}">{{ strtoupper($alert->severity) }}</span>
-                        </td>
-                        <td>
-                            @if($alert->transaction)
-                                <a href="{{ route('transactions.show', $alert->transaction->id) }}" class="btn btn-secondary">
-                                    #{{ $alert->transaction->id }}
-                                </a>
-                            @else
-                                <span class="text-muted">N/A</span>
-                            @endif
-                        </td>
-                        <td><span class="badge badge-primary">{{ strtoupper($alert->review_status ?: $alert->status) }}</span></td>
-                        <td>{{ optional($alert->created_at)->format('Y-m-d H:i') }}</td>
-                    </tr>
+                <tr class="{{ strtolower((string) $alert->severity) === 'high' ? 'row-danger' : '' }}">
+                    <td>#{{ $alert->id }}</td>
+                    <td>{{ $alert->rule_code ?: $alert->type }}</td>
+                    <td>{{ $alert->message }}</td>
+                    <td>
+                        @php
+                        $severityClass = match (strtolower($alert->severity)) {
+                        'high' => 'badge-high',
+                        'medium' => 'badge-medium',
+                        default => 'badge-low',
+                        };
+                        @endphp
+                        <span class="badge {{ $severityClass }}">{{ strtoupper($alert->severity) }}</span>
+                    </td>
+                    <td>
+                        @if($alert->transaction)
+                        <a href="{{ route('transactions.show', $alert->transaction->id) }}" class="btn btn-secondary">
+                            #{{ $alert->transaction->id }}
+                        </a>
+                        @else
+                        <span class="text-muted">N/A</span>
+                        @endif
+                    </td>
+                    <td>
+                        @php
+                        $reviewClass = match ($alert->review_status) {
+                        'approved' => 'badge-high',
+                        'rejected' => 'badge-low',
+                        'confirmed_fraud' => 'badge-high',
+                        'false_positive' => 'badge-medium',
+                        default => 'badge-primary',
+                        };
+                        @endphp
+
+                        <span class="badge {{ $reviewClass }}">
+                            {{ strtoupper($alert->review_status) }}
+                        </span>
+                    </td>
+                    <td>{{ optional($alert->created_at)->format('Y-m-d H:i') }}</td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="7" class="empty-state">No alerts available.</td>
-                    </tr>
+                <tr>
+                    <td colspan="7" class="empty-state">No alerts available.</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
     @if(method_exists($alerts, 'links'))
-        <div class="pagination-wrap small text-muted">
-            {{ $alerts->links() }}
-        </div>
+    <div class="pagination-wrap small text-muted">
+        {{ $alerts->links() }}
+    </div>
     @endif
 </div>
 @endsection
-

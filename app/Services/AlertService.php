@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Startup;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class AlertService
 {
@@ -17,14 +19,15 @@ class AlertService
 
         $detailsByRule->each(function ($ruleDetails, string $ruleCode) use ($startup) {
             $this->normalizeRuleDetails($ruleDetails, $ruleCode)->each(function (array $detail) use ($startup, $ruleCode) {
-                $startup->alerts()->firstOrCreate(
-                    [
+                $this->createAlertIfNotDuplicate(
+                    startup: $startup,
+                    transactionId: $detail['transaction_id'],
+                    ruleCode: $ruleCode,
+                    message: $detail['message'],
+                    payload: [
                         'transaction_id' => $detail['transaction_id'],
                         'rule_code' => $ruleCode,
                         'message' => $detail['message'],
-                    ],
-                    [
-                        // Keep legacy "type" for compatibility with existing app flows/tests.
                         'type' => $ruleCode,
                         'severity' => $detail['severity'],
                         'status' => 'new',
@@ -42,13 +45,17 @@ class AlertService
             return;
         }
 
-        $startup->alerts()->firstOrCreate(
-            [
+        $message = 'Simulation shows a high financial risk level.';
+
+        $this->createAlertIfNotDuplicate(
+            startup: $startup,
+            transactionId: null,
+            ruleCode: 'simulation_risk',
+            message: $message,
+            payload: [
                 'transaction_id' => null,
                 'rule_code' => 'simulation_risk',
-                'message' => 'Simulation shows a high financial risk level.',
-            ],
-            [
+                'message' => $message,
                 'type' => 'simulation_risk',
                 'severity' => 'high',
                 'status' => 'new',
@@ -58,9 +65,55 @@ class AlertService
         );
     }
 
+    private function recentDuplicateExists(
+        Startup $startup,
+        ?int $transactionId,
+        string $ruleCode,
+        string $message,
+        int $hours = 24
+    ): bool {
+        return $startup->alerts()
+            ->where('transaction_id', $transactionId)
+            ->where('rule_code', $ruleCode)
+            ->where('message', $message)
+            ->where('created_at', '>=', Carbon::now()->subHours($hours))
+            ->exists();
+    }
+
+    /**
+     * Prevent duplicate alerts under concurrent requests by serializing writes per startup.
+     */
+    private function createAlertIfNotDuplicate(
+        Startup $startup,
+        ?int $transactionId,
+        string $ruleCode,
+        string $message,
+        array $payload
+    ): void {
+        DB::transaction(function () use ($startup, $transactionId, $ruleCode, $message, $payload): void {
+            // Lock startup row to make duplicate check + create atomic for this startup.
+            Startup::query()
+                ->whereKey($startup->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($this->recentDuplicateExists(
+                startup: $startup,
+                transactionId: $transactionId,
+                ruleCode: $ruleCode,
+                message: $message,
+                hours: 24
+            )) {
+                return;
+            }
+
+            $startup->alerts()->create($payload);
+        }, 3);
+    }
+
     private function normalizeRuleDetails(mixed $ruleDetails, string $ruleCode): Collection
     {
-        if (! is_array($ruleDetails) || empty($ruleDetails)) {
+        if (!is_array($ruleDetails) || empty($ruleDetails)) {
             return collect([[
                 'transaction_id' => null,
                 'severity' => $this->mapFraudSeverity($ruleCode),

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTransactionRequest;
 use App\Models\Startup;
+use App\Models\Transaction;
 use App\Services\TransactionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;

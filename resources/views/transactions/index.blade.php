@@ -11,7 +11,10 @@
     <div class="page-actions">
         <a href="{{ route('transactions.create') }}" class="btn btn-primary">Add Transaction</a>
         @if(isset($startup))
-            <a href="{{ route('fraud.show', $startup->id) }}" class="btn btn-secondary" data-loading-link data-loading-text="Analyzing...">Run Fraud Detection</a>
+        <form method="POST" action="{{ route('fraud-detection.run', $startup->id) }}" class="inline-form">
+            @csrf
+            <button type="submit" class="btn btn-secondary" data-loading-text="Analyzing...">Run Fraud Detection</button>
+        </form>
         @endif
     </div>
 </div>
@@ -37,41 +40,40 @@
             </thead>
             <tbody>
                 @forelse($transactions as $transaction)
-                    <tr class="{{ $transaction->is_suspicious ? 'row-suspicious' : '' }}">
-                        <td>#{{ $transaction->id }}</td>
-                        <td>{{ ucfirst($transaction->type) }}</td>
-                        <td>${{ number_format((float) $transaction->amount, 2) }}</td>
-                        <td>{{ optional($transaction->transaction_date)->format('Y-m-d') }}</td>
-                        <td>
-                            <span class="badge {{ $transaction->is_suspicious ? 'badge-high' : 'badge-success' }}">
-                                {{ $transaction->is_suspicious ? 'Suspicious' : 'Normal' }}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="table-actions">
-                                <a href="{{ route('transactions.show', $transaction->id) }}" class="btn">View</a>
-                                <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" onsubmit="return confirm('Delete this transaction?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" data-loading-text="Deleting...">Delete</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
+                <tr class="{{ $transaction->is_suspicious ? 'row-suspicious' : '' }}">
+                    <td>#{{ $transaction->id }}</td>
+                    <td>{{ ucfirst($transaction->type) }}</td>
+                    <td>${{ number_format((float) $transaction->amount, 2) }}</td>
+                    <td>{{ optional($transaction->transaction_date)->format('Y-m-d') }}</td>
+                    <td>
+                        <span class="badge {{ $transaction->is_suspicious ? 'badge-high' : 'badge-success' }}">
+                            {{ $transaction->is_suspicious ? 'Suspicious' : 'Normal' }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <a href="{{ route('transactions.show', $transaction->id) }}" class="btn">View</a>
+                            <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" onsubmit="return confirm('Delete this transaction?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" data-loading-text="Deleting...">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="6" class="empty-state">No transactions found.</td>
-                    </tr>
+                <tr>
+                    <td colspan="6" class="empty-state">No transactions found.</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
     @if(method_exists($transactions, 'links'))
-        <div class="pagination-wrap small text-muted">
-            {{ $transactions->links() }}
-        </div>
+    <div class="pagination-wrap small text-muted">
+        {{ $transactions->links() }}
+    </div>
     @endif
 </div>
 @endsection
-

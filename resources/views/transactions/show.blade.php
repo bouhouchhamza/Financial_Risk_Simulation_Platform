@@ -10,7 +10,10 @@
     </div>
     <div class="page-actions">
         @if(isset($startup))
-            <a href="{{ route('fraud.show', $startup->id) }}" class="btn btn-secondary" data-loading-link data-loading-text="Analyzing...">Run Fraud Detection</a>
+            <form method="POST" action="{{ route('fraud-detection.run', $startup->id) }}" class="inline-form">
+                @csrf
+                <button type="submit" class="btn btn-secondary" data-loading-text="Analyzing...">Run Fraud Detection</button>
+            </form>
         @endif
         <a href="{{ route('transactions.index') }}" class="btn btn-secondary">Back</a>
     </div>
@@ -95,4 +98,3 @@
     </div>
 @endif
 @endsection
-

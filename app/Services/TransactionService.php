@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Startup;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\DB;
 
 class TransactionService
 {
@@ -13,12 +14,14 @@ class TransactionService
 
     public function createForStartup(Startup $startup, array $validatedData): Transaction
     {
-        $transaction = $startup->transactions()->create($validatedData);
+        return DB::transaction(function () use ($startup, $validatedData): Transaction {
+            $transaction = $startup->transactions()->create($validatedData);
 
-        // Auto-run fraud checks after each transaction creation for MVP safety.
-        $this->fraudAnalysisService->runForStartup($startup);
+            // Auto-run fraud checks in the same transaction to keep state consistent.
+            $this->fraudAnalysisService->runForStartup($startup->fresh());
 
-        return $transaction->fresh();
+            return $transaction->fresh();
+        }, 3);
     }
 
     public function delete(Transaction $transaction): void
