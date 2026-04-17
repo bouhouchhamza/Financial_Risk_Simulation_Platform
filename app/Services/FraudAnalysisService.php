@@ -25,7 +25,7 @@ class FraudAnalysisService
     private function markSuspiciousTransactions(Startup $startup, array $fraudResult): void
     {
         $transactionIds = $this->extractFlaggedTransactionIds($fraudResult);
-
+        $startup->transactions()->update(['is_suspicious' => false]);
         if ($transactionIds->isEmpty()) {
             return;
         }
@@ -44,11 +44,11 @@ class FraudAnalysisService
                 }
 
                 return collect($ruleDetails)
-                    ->filter(fn ($item) => is_array($item) && isset($item['transaction_id']))
+                    ->filter(fn($item) => is_array($item) && isset($item['transaction_id']))
                     ->pluck('transaction_id');
             })
-            ->filter(fn ($id) => is_numeric($id))
-            ->map(fn ($id) => (int) $id)
+            ->filter(fn($id) => is_numeric($id))
+            ->map(fn($id) => (int) $id)
             ->unique()
             ->values();
     }
