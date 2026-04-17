@@ -6,7 +6,7 @@
         $startupId = auth()->user()?->startup?->id;
     @endphp
     <a class="nav-link {{ request()->routeIs('fraud.*') || request()->routeIs('fraud-detection.*') ? 'active' : '' }}"
-       href="{{ $startupId ? route('fraud.show', $startupId) : route('startup.create') }}">
+       href="{{ $startupId ? route('fraud-detection.show', $startupId) : route('startup.create') }}">
        Fraud Detection
     </a>
     <a class="nav-link {{ request()->routeIs('alerts.*') ? 'active' : '' }}" href="{{ route('alerts.index') }}">Alerts</a>

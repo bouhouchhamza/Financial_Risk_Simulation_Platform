@@ -30,7 +30,10 @@
     <div class="page-actions">
         @if($startup)
             <a href="{{ route('transactions.create') }}" class="btn btn-primary">Add Transaction</a>
-            <a href="{{ route('fraud.show', $startup->id) }}" class="btn btn-secondary" data-loading-link data-loading-text="Analyzing...">Run Fraud Detection</a>
+            <form method="POST" action="{{ route('fraud-detection.run', $startup->id) }}" class="inline-form">
+                @csrf
+                <button type="submit" class="btn btn-secondary" data-loading-text="Analyzing...">Run Fraud Detection</button>
+            </form>
         @else
             <a href="{{ route('startup.create') }}" class="btn btn-primary">Create Startup</a>
         @endif
