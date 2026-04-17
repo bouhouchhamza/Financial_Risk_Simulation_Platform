@@ -1,13 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@php
-    $startup = auth()->user()?->startup;
-    $recentSimulations = $startup
-        ? $startup->simulations()->latest()->take(5)->get()
-        : collect();
-@endphp
-
 <div class="page-header">
     <h1 class="page-title">Simulations</h1>
     <div class="page-actions">

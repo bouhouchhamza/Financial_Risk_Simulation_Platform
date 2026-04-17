@@ -9,7 +9,9 @@ class SimulationController extends Controller
 {
     public function index()
     {
-        return view('simulations.index');
+        $startup = auth()->user()?->startup;
+        $recentSimulations = $startup ? $startup->simulations()->latest()->take(5)->get():collect();
+        return view('simulations.index', compact('startup', 'recentSimulations'));
     }
 
     public function store(Request $request, SimulationService $simulationService)
