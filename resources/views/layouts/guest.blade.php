@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'PFF') }}</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @vite('resources/css/app.css')
 </head>
-<body>
+<body class="{{ request()->routeIs('login') ? 'login-page' : (request()->routeIs('register') ? 'register-page' : '') }}">
     <div class="auth-shell">
         <div class="card auth-card">
             {{ $slot }}
