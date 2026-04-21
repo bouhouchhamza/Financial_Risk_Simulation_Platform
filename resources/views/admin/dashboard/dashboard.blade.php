@@ -52,7 +52,7 @@
         </div>
 
         <div class="chart-box">
-            <canvas id="activityChart"></canvas>
+            <canvas id="activityChart" data-chart-data='@json($chartData)'></canvas>
         </div>
     </div>
 
@@ -108,41 +108,5 @@
         </div>
     </div>
 </div>
-<script>
-    const ctx = document.getElementById('activityChart').getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 0, 320);
-    gradient.addColorStop(0, 'rgba(77, 142, 255, 0.95)');
-    gradient.addColorStop(1, 'rgba(77, 142, 255, 0.20)');
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['6d ago', '5d ago', '4d ago', '3d ago', '2d ago', 'Yesterday', 'Today'],
-            datasets: [{
-                label: 'Activity',
-                data: @json($chartData),
-                backgroundColor: gradient,
-                borderRadius: 10,
-                borderSkipped: false,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: {
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: '#94a8c6' }
-                },
-                x: {
-                    grid: { display: false },
-                    ticks: { color: '#94a8c6' }
-                }
-            }
-        }
-    });
-</script>
 @endsection
