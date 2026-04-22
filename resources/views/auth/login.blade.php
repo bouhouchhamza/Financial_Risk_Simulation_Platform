@@ -5,7 +5,7 @@
 
         <!-- BRAND -->
         <div class="login-brand">
-            <div class="logo-box">◆</div>
+            <div class="logo-box">SF</div>
             <div>
                 <h1 class="brand-title">Sentinel Finance</h1>
                 <span class="brand-sub">SECURE ACCESS</span>
@@ -57,13 +57,10 @@
 
         <!-- FOOTER -->
         <div class="login-footer">
-            © Sentinel Finance — Secure System
+            (c) Sentinel Finance - Secure System
         </div>
 
     </div>
 
 </div>
-
-
-
 </x-guest-layout>

@@ -17,7 +17,7 @@
 
         <div class="alerts-stats">
             <div class="alert-stat-card">
-                <div class="alert-stat-icon critical">⛔</div>
+                <div class="alert-stat-icon critical">CR</div>
                 <div>
                     <div class="alert-stat-label">Critical</div>
                     <div class="alert-stat-value">{{ $criticalCount }}</div>
@@ -25,7 +25,7 @@
             </div>
 
             <div class="alert-stat-card">
-                <div class="alert-stat-icon warning">⚠️</div>
+                <div class="alert-stat-icon warning">WR</div>
                 <div>
                     <div class="alert-stat-label">Warning</div>
                     <div class="alert-stat-value">{{ $warningCount }}</div>
@@ -61,7 +61,7 @@
                     <div class="alert-top-row">
                         <div class="alert-title-wrap">
                             <div class="alert-icon {{ $tone }}">
-                                {{ $tone === 'critical' ? '🔥' : ($tone === 'warning' ? '⚠️' : 'ℹ️') }}
+                                {{ $tone === 'critical' ? 'AL' : ($tone === 'warning' ? 'WR' : 'IN') }}
                             </div>
                             <h3>{{ ucwords(str_replace('_', ' ', $alert->type ?? $alert->rule_code ?? 'Fraud alert')) }}</h3>
                         </div>

@@ -53,7 +53,7 @@
                                 name="password"
                                 required
                                 autocomplete="new-password"
-                                placeholder="••••••••">
+                                placeholder="********">
                             @error('password')
                             <p class="field-error">{{ $message }}</p>
                             @enderror
@@ -67,7 +67,7 @@
                                 name="password_confirmation"
                                 required
                                 autocomplete="new-password"
-                                placeholder="••••••••">
+                                placeholder="********">
                         </div>
                     </div>
 
@@ -91,6 +91,4 @@
             </div>
         </div>
     </div>
-
-    
 </x-guest-layout>

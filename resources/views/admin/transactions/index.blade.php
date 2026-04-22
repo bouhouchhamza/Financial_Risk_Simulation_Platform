@@ -18,7 +18,7 @@
         <div class="hero-metric-card">
             <div class="hero-metric-kicker">Total Ledger Volume</div>
             <div class="hero-metric-value">{{ number_format((float) $totalVolume, 2) }} MAD</div>
-            <div class="hero-metric-trend">↑ live transaction monitoring</div>
+            <div class="hero-metric-trend">Upward live transaction monitoring</div>
             <div class="hero-accent-line"></div>
         </div>
 
@@ -175,4 +175,3 @@
     </div>
 </div>
 @endsection
-

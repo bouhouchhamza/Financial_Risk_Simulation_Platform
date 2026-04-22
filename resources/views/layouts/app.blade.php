@@ -9,7 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
+<body class="user-page">
     @php
     $startupId = auth()->user()?->startup?->id;
     $fraudDetectionUrl = $startupId ? route('fraud-detection.show', $startupId) : route('startup.create');
@@ -17,17 +17,19 @@
     $avatarLetter = strtoupper(substr($userName, 0, 1));
     @endphp
 
-    <div class="app-shell">
-        <aside class="sidebar">
-            <a href="{{ route('dashboard') }}" class="brand">
-                <span class="brand-logo">F</span>
-                <span class="brand-copy">
-                    <span class="brand-title">FinFlow</span>
-                    <span class="brand-subtitle">Fraud Monitor</span>
-                </span>
-            </a>
+    <div class="app-shell admin-layout user-layout">
+        <aside class="sidebar user-sidebar">
+            <div class="sidebar-brand">
+                <a href="{{ route('dashboard') }}" class="brand sidebar-brand-link">
+                    <span class="brand-logo sidebar-brand-mark">F</span>
+                    <span class="brand-copy sidebar-brand-text">
+                        <strong class="brand-title">FinFlow</strong>
+                        <small class="brand-subtitle">Fraud Monitor</small>
+                    </span>
+                </a>
+            </div>
 
-            <nav class="sidebar-nav">
+            <nav class="sidebar-nav sidebar-menu">
 
                 <div class="sidebar-group-title">OVERVIEW</div>
                 <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'is-active' : '' }}">
@@ -87,26 +89,38 @@
 
             </nav>
 
-            <div class="sidebar-footer">
-                <p class="sidebar-footer-label">Signed in as</p>
+            <div class="sidebar-footer sidebar-utility">
+                <a href="{{ route('simulations.index') }}" class="sidebar-cta">Run Simulation</a>
+                <p class="sidebar-footer-label sidebar-utility-note">Signed in as</p>
                 <p class="sidebar-footer-name">{{ $userName }}</p>
             </div>
         </aside>
 
-        <div class="app-main">
-            <header class="topbar">
-                <h1 class="topbar-title">@yield('page_title', 'Dashboard')</h1>
-                <div class="topbar-user">
+        <div class="app-main main-content">
+            <header class="topbar user-topbar">
+                <div class="topbar-left">
+                    <div class="topbar-heading">
+                        <span class="topbar-kicker">User Workspace</span>
+                        <h1 class="topbar-title">@yield('page_title', 'Dashboard')</h1>
+                    </div>
+                </div>
+                <div class="topbar-actions">
                     <a href="{{ route('profile.edit') }}" class="btn btn-secondary">Profile</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn btn-primary" data-loading-text="Signing out...">Logout</button>
                     </form>
-                    <span class="avatar">{{ $avatarLetter }}</span>
+                    <div class="topbar-user-chip">
+                        <span class="avatar">{{ $avatarLetter }}</span>
+                        <span class="topbar-user-meta">
+                            <strong>{{ $userName }}</strong>
+                            <span>User</span>
+                        </span>
+                    </div>
                 </div>
             </header>
 
-            <main class="content">
+            <main class="content content-wrapper">
                 @if(session('success'))
                 <div class="notice notice-success" data-auto-hide="true">
                     {{ session('success') }}
@@ -123,8 +137,6 @@
             </main>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 </html>

@@ -16,7 +16,7 @@
         <div class="dashboard-stat-card">
             <div class="stat-top">
                 <span class="stat-caption">TOTAL REGISTERED USERS</span>
-                <span class="stat-icon">👥</span>
+                <span class="stat-icon">US</span>
             </div>
             <div class="stat-number">{{ number_format($totalUsers) }}</div>
             <div class="stat-trend positive">+ Live system data</div>
@@ -25,7 +25,7 @@
         <div class="dashboard-stat-card">
             <div class="stat-top">
                 <span class="stat-caption">TOTAL TRANSACTIONS</span>
-                <span class="stat-icon">💳</span>
+                <span class="stat-icon">TX</span>
             </div>
             <div class="stat-number">{{ number_format($totalTxns) }}</div>
             <div class="stat-trend positive">Across {{ number_format($totalStartups) }} startups</div>
@@ -34,7 +34,7 @@
         <div class="dashboard-stat-card">
             <div class="stat-top">
                 <span class="stat-caption">UNRESOLVED ALERTS</span>
-                <span class="stat-icon">🔔</span>
+                <span class="stat-icon">AL</span>
             </div>
             <div class="stat-number">{{ $totalAlerts }}</div>
             <div class="stat-trend {{ $totalAlerts > 0 ? 'negative' : 'positive' }}">
@@ -52,7 +52,11 @@
         </div>
 
         <div class="chart-box">
-            <canvas id="activityChart" data-chart-data='@json($chartData)'></canvas>
+            <canvas
+                id="activityChart"
+                data-labels='@json($chartLabels ?? [])'
+                data-values='@json($chartData ?? [])'>
+            </canvas>
         </div>
     </div>
 
@@ -73,6 +77,7 @@
                         <th>Assigned Role</th>
                         <th>Last Activity</th>
                         <th>Status</th>
+                        <th class="text-right">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,11 +101,14 @@
                                 <span class="role-badge">{{ $roleName }}</span>
                             </td>
                             <td class="muted-text">2 mins ago</td>
-                            <td><span class="status-dot active">● Active</span></td>
+                            <td><span class="status-dot active">Active</span></td>
+                            <td class="text-right">
+                                <a href="{{ route('admin.users.index') }}" class="edit-btn">View</a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="empty-table">No users found.</td>
+                            <td colspan="5" class="empty-table">No users found.</td>
                         </tr>
                     @endforelse
                 </tbody>

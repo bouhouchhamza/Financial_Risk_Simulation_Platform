@@ -50,9 +50,9 @@
                             };
 
                             $icon = match($index) {
-                                0 => '☁️',
-                                1 => '🧬',
-                                default => '⚡',
+                                0 => 'OK',
+                                1 => 'MD',
+                                default => 'AL',
                             };
                         @endphp
 

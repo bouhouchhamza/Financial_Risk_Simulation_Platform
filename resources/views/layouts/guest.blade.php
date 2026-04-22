@@ -7,11 +7,19 @@
     <title>{{ config('app.name', 'PFF') }}</title>
     @vite('resources/css/app.css')
 </head>
-<body class="{{ request()->routeIs('login') ? 'login-page' : (request()->routeIs('register') ? 'register-page' : '') }}">
-    <div class="auth-shell">
-        <div class="card auth-card">
-            {{ $slot }}
+@php
+    $isLoginPage = request()->routeIs('login');
+    $isRegisterPage = request()->routeIs('register');
+@endphp
+<body class="{{ $isLoginPage ? 'login-page' : ($isRegisterPage ? 'register-page' : 'guest-auth-page') }}">
+    @if($isLoginPage || $isRegisterPage)
+        {{ $slot }}
+    @else
+        <div class="auth-shell">
+            <div class="card auth-card">
+                {{ $slot }}
+            </div>
         </div>
-    </div>
+    @endif
 </body>
 </html>

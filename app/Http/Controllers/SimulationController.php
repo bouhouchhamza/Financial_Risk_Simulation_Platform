@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ReportService;
 use App\Services\SimulationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SimulationController extends Controller
 {
@@ -14,7 +16,7 @@ class SimulationController extends Controller
         return view('simulations.index', compact('startup', 'recentSimulations'));
     }
 
-    public function store(Request $request, SimulationService $simulationService)
+    public function store(Request $request, SimulationService $simulationService, ReportService $reportService)
     {
         $startup = auth()->user()->startup;
         if (!$startup) {
@@ -24,24 +26,34 @@ class SimulationController extends Controller
             'duration' => ['required', 'in:6_month,12_month'],
         ]);
         $simulationData = $simulationService->run($startup, $validated['duration']);
-        $simulation = $startup->simulations()->create([
-            'duration' => $simulationData['duration'],
-            'total_revenue' => $simulationData['total_revenue'],
-            'total_expenses' => $simulationData['total_expenses'],
-            'final_cashflow' => $simulationData['final_cashflow'],
-            'risk_level' => $simulationData['risk_level'],
-        ]);
-        foreach ($simulationData['monthly_results'] as $result) {
-            $simulation->simulationResults()->create([
-                'month_number' => $result['month_number'],
-                'revenue' => $result['revenue'],
-                'expenses' => $result['expenses'],
-                'cashflow' => $result['cashflow'],
-                'is_critical' => $result['is_critical'],
-            ]);
-        }
 
-        return redirect()->route('simulations.show', $simulation->id)->with('success', 'Simulation created successfully');
+        $simulation = DB::transaction(function () use ($startup, $simulationData, $reportService) {
+            $simulation = $startup->simulations()->create([
+                'duration' => $simulationData['duration'],
+                'total_revenue' => $simulationData['total_revenue'],
+                'total_expenses' => $simulationData['total_expenses'],
+                'final_cashflow' => $simulationData['final_cashflow'],
+                'risk_level' => $simulationData['risk_level'],
+            ]);
+
+            foreach ($simulationData['monthly_results'] as $result) {
+                $simulation->simulationResults()->create([
+                    'month_number' => $result['month_number'],
+                    'revenue' => $result['revenue'],
+                    'expenses' => $result['expenses'],
+                    'cashflow' => $result['cashflow'],
+                    'is_critical' => $result['is_critical'],
+                ]);
+            }
+
+            $reportService->createFromSimulation($startup, $simulation);
+
+            return $simulation;
+        });
+
+        return redirect()
+            ->route('simulations.show', $simulation->id)
+            ->with('success', 'Simulation created successfully. Report generated.');
     }
 
     public function show($id)

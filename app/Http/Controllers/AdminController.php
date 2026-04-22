@@ -15,11 +15,13 @@ class AdminController extends Controller
             $totalTxns = class_exists(\App\Models\Transaction::class) ? \App\Models\Transaction::count() : 0;
             $totalAlerts = class_exists(\App\Models\Alert::class) ? \App\Models\Alert::count() : 0;
 
-            // Data dyal l-Chart (7 days)
+            // Real 7-day activity series for the admin chart.
+            $chartLabels = [];
             $chartData = [];
             for ($i = 6; $i >= 0; $i--) {
-                $date = now()->subDays($i)->format('Y-m-d');
-                $chartData[] = User::whereDate('created_at', $date)->count();
+                $date = now()->subDays($i);
+                $chartLabels[] = $date->format('M d');
+                $chartData[] = User::whereDate('created_at', $date->toDateString())->count();
             }
 
             $users = User::latest()->take(10)->get();
@@ -29,7 +31,8 @@ class AdminController extends Controller
             $totalTxns = 0;
             $totalAlerts = 0;
             $users = collect();
-            $chartData = [0, 0, 0, 0, 0, 0, 0];
+            $chartLabels = [];
+            $chartData = [];
         }
 
         return view('admin.dashboard.dashboard', compact(
@@ -38,6 +41,7 @@ class AdminController extends Controller
             'totalTxns',
             'totalAlerts',
             'users',
+            'chartLabels',
             'chartData'
         ));
     }

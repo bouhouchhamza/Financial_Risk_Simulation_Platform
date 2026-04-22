@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.index');
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/{id}/download', [ReportController::class, 'download'])->name('reports.download');
     Route::get('/reports/{id}', [ReportController::class, 'show'])->name('reports.show');
     Route::delete('/reports/{id}', [ReportController::class, 'destroy'])->name('reports.destroy');
     Route::get('/startups/{startup}/fraud-detection', [FraudDetectionController::class, 'show'])->name('fraud-detection.show');
