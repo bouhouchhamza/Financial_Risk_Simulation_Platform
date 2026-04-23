@@ -99,6 +99,9 @@
         <div class="app-main main-content">
             <header class="topbar user-topbar">
                 <div class="topbar-left">
+                    <button type="button" class="menu-toggle" data-user-menu-toggle aria-expanded="false" aria-label="Toggle menu">
+                        <span></span><span></span><span></span>
+                    </button>
                     <div class="topbar-heading">
                         <span class="topbar-kicker">User Workspace</span>
                         <h1 class="topbar-title">@yield('page_title', 'Dashboard')</h1>
@@ -108,7 +111,7 @@
                     <a href="{{ route('profile.edit') }}" class="btn btn-secondary">Profile</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="btn btn-primary" data-loading-text="Signing out...">Logout</button>
+                        <button type="submit" class="btn btn-primary">Logout</button>
                     </form>
                     <div class="topbar-user-chip">
                         <span class="avatar">{{ $avatarLetter }}</span>
@@ -122,13 +125,13 @@
 
             <main class="content content-wrapper">
                 @if(session('success'))
-                <div class="notice notice-success" data-auto-hide="true">
+                <div class="notice notice-success">
                     {{ session('success') }}
                 </div>
                 @endif
 
                 @if(session('error'))
-                <div class="notice notice-error" data-auto-hide="true">
+                <div class="notice notice-error">
                     {{ session('error') }}
                 </div>
                 @endif

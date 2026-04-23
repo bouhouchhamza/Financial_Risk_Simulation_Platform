@@ -11,7 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="welcome-page">
-    <header class="nav load d1" id="top">
+    <header class="nav" id="top">
         <div class="container nav-inner">
             <a class="brand" href="#top">SENTINEL</a>
             <button id="toggle" class="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="menu">
@@ -35,10 +35,10 @@
         <span class="glow blue"></span>
         <span class="glow green"></span>
         <div class="container hero-content">
-            <div class="badge load d2"><span class="dot"></span><span>Advanced Fintech Platform</span></div>
-            <h1 class="load d3">Simulate. Detect. <span class="grad">Decide.</span></h1>
-            <p class="load d4">SENTINEL gives modern fintech teams one environment to run simulations, detect anomalies in real time, and turn risk signals into confident decisions.</p>
-            <div class="hero-cta load d4">
+            <div class="badge"><span class="dot"></span><span>Advanced Fintech Platform</span></div>
+            <h1>Simulate. Detect. <span class="grad">Decide.</span></h1>
+            <p>SENTINEL gives modern fintech teams one environment to run simulations, detect anomalies in real time, and turn risk signals into confident decisions.</p>
+            <div class="hero-cta">
                 <a href="{{ route('register') }}" class="btn btn-primary">Start Free Trial</a>
                 <a href="#docs" class="btn btn-dark">See Platform Tour</a>
             </div>
@@ -47,10 +47,10 @@
 
     <section class="section" id="features">
         <div class="container">
-            <p class="label reveal">Features</p>
-            <h2 class="title reveal">Precision Engineering</h2>
+            <p class="label">Features</p>
+            <h2 class="title">Precision Engineering</h2>
             <div class="grid">
-                <article class="card a reveal">
+                <article class="card a">
                     <h3>Risk Simulation</h3>
                     <p>Run deterministic and stress-test scenarios to anticipate downstream exposure before it happens.</p>
                     <div class="mini">
@@ -61,14 +61,14 @@
                         </svg>
                     </div>
                 </article>
-                <article class="card b reveal">
+                <article class="card b">
                     <span class="icon">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 4v5c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>
                     </span>
                     <h3>Fraud Detection</h3>
                     <p>Adaptive rule intelligence with explainable match details for each event.</p>
                 </article>
-                <article class="card c reveal">
+                <article class="card c">
                     <h3>Analytics</h3>
                     <p>Fast visibility into transaction quality and operational risk ratios.</p>
                     <div class="stack">
@@ -76,7 +76,7 @@
                         <div><div class="plabel">Resolution Rate</div><div class="bar"><div class="fill fill-green"></div></div></div>
                     </div>
                 </article>
-                <article class="card d reveal">
+                <article class="card d">
                     <h3>Digital Sovereignty</h3>
                     <p>Deploy under your own controls with strict governance, data residency, and isolated infrastructure options.</p>
                     <div class="tags"><span class="tag">On-Premise</span><span class="tag">Air-Gapped</span></div>
@@ -87,8 +87,8 @@
 
     <section class="section command" id="docs">
         <div class="container">
-            <h2 class="center-title reveal">The Command Center</h2>
-            <div class="glass shell reveal">
+            <h2 class="center-title">The Command Center</h2>
+            <div class="glass shell">
                 <div class="layout">
                     <aside class="side">
                         <div class="side-brand">SENTINEL Console</div>
@@ -118,7 +118,7 @@
 
     <section class="section" id="pricing">
         <div class="container test-wrap">
-            <div class="reveal">
+            <div>
                 <h2>Trusted by the visionaries of fintech.</h2>
                 <ul class="checks">
                     <li><span class="check">✓</span><span>Enterprise-grade monitoring without operational drag.</span></li>
@@ -126,7 +126,7 @@
                     <li><span class="check">✓</span><span>Rapid rollout across security, compliance, and fraud teams.</span></li>
                 </ul>
             </div>
-            <div class="quotes reveal">
+            <div class="quotes">
                 <article class="q accent">
                     <p>"SENTINEL replaced three disconnected tools and gave us one source of truth for risk decisions in less than two weeks."</p>
                     <div class="author">Amina H., COO at FluxPay</div>
@@ -141,7 +141,7 @@
 
     <section class="section cta">
         <div class="container">
-            <div class="glass cta-box reveal">
+            <div class="glass cta-box">
                 <h2>Secure your future.</h2>
                 <p>Deploy SENTINEL in minutes and give your fintech stack proactive risk intelligence from day one.</p>
                 <div class="cta-action"><a href="{{ route('register') }}" class="btn btn-primary btn-lg">Get Started Free</a></div>
