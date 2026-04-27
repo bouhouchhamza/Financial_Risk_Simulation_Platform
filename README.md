@@ -1,58 +1,252 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 💳 Fintech Fraud Detection & Simulation System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📌 Overview
 
-## About Laravel
+This project is a **Fintech Web Application** built with Laravel that simulates financial transactions and detects suspicious or fraudulent activities.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The system analyzes transactions in real time, assigns a risk score, and generates alerts for administrators to review.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🎯 Objectives
 
-## Learning Laravel
+* Monitor financial transactions
+* Detect suspicious behavior automatically
+* Generate alerts based on fraud rules
+* Provide an admin system for review and decision-making
+* Simulate transactions for testing fraud detection
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tech Stack
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+* **Backend:** Laravel (PHP)
+* **Frontend:** Blade + JavaScript (Chart.js)
+* **Database:** MySQL
+* **Architecture:** MVC + Service Layer + Dependency Injection
+* **Queue & Sessions:** Database
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## ⚙️ Features
 
-```bash
-composer require laravel/boost --dev
+### 👤 User Features
 
-php artisan boost:install
+* Create and manage a startup
+* Add transactions (sales / purchases)
+* View dashboard:
+
+  * Total revenue
+  * Total expenses
+  * Total transactions
+* View fraud alerts related to their activity
+
+---
+
+### 🔍 Fraud Detection System
+
+* Automatic transaction analysis
+* Uses configurable **Fraud Rules**
+* Example rules:
+
+  * High transaction amount
+  * Suspicious patterns
+  * Duplicate transactions
+
+Each rule contains:
+
+* `threshold_value`
+* `score_weight`
+* `decision` (allow / review / block)
+
+---
+
+### 📊 Risk Scoring
+
+* Each rule increases a **risk score**
+* Final result includes:
+
+  * `risk_score`
+  * `risk_level` (low / medium / high)
+  * `decision`
+
+---
+
+### 🚨 Alerts System
+
+* Alerts generated automatically after analysis
+* Each alert contains:
+
+  * Flags (triggered rules)
+  * Details
+  * Status: `pending`, `approved`, `rejected`
+
+---
+
+### 🛡️ Admin Features
+
+* Admin dashboard
+* Review fraud alerts
+* Approve / Reject / Investigate alerts
+* Manage:
+
+  * Users
+  * Startups
+  * Transactions
+  * Fraud Rules
+
+---
+
+### 🧪 Simulation Module
+
+* Simulate transactions
+* Test fraud detection logic
+* Validate system behavior
+
+---
+
+## 🔄 System Workflow
+
+```
+User creates transaction
+→ TransactionController
+→ TransactionService
+→ FraudAnalysisService
+→ FraudDetectionService
+→ AlertService
+→ Alert stored in database
+→ Admin reviews alert
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 🧱 Architecture
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The project follows clean architecture principles:
 
-## Code of Conduct
+* **Controllers** → Handle HTTP requests
+* **Services** → Business logic
+* **Models** → Database interaction
+* **Dependency Injection** → Loose coupling & maintainability
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Key Services:
 
-## Security Vulnerabilities
+* `TransactionService`
+* `FraudAnalysisService`
+* `FraudDetectionService`
+* `AlertService`
+* `DashboardService`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🗄️ Database Structure
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Main tables:
+
+* `users`
+* `startups`
+* `transactions`
+* `fraud_rules`
+* `alerts`
+
+---
+
+## 🚀 Installation
+
+```bash
+# Clone project
+git clone <your-repo-url>
+
+# Enter project
+cd project-name
+
+# Install dependencies
+composer install
+npm install
+
+# Setup environment
+cp .env.example .env
+
+# Configure database in .env
+
+# Generate key
+php artisan key:generate
+
+# Run migrations
+php artisan migrate
+
+# Seed database
+php artisan db:seed
+
+# Start server
+php artisan serve
+```
+
+---
+
+## ⚙️ Environment Configuration
+
+Update your `.env` file:
+
+```
+DB_DATABASE=pff
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+## 🧪 Testing
+
+Run tests using:
+
+```bash
+php artisan test
+```
+
+Includes:
+
+* Transaction creation test
+* Fraud detection trigger test
+* Admin review workflow
+
+---
+
+## 📊 UI & Dashboard
+
+* Charts built with **Chart.js**
+* Revenue vs Expenses visualization
+* Clean dark theme interface
+
+---
+
+## 📸 Screenshots
+
+> Add screenshots here:
+
+* Dashboard
+* Transactions page
+* Alerts page
+* Admin panel
+
+---
+
+## 🔮 Future Improvements
+
+* AI-based fraud detection
+* Real-time notifications
+* REST API integration
+* Multi-tenant support
+* Advanced analytics dashboard
+
+---
+
+## 👨‍💻 Author
+
+* Your Name
+
+---
+
+## 📄 License
+
+This project is for educational purposes (PFE / academic project).
