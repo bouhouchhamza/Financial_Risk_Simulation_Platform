@@ -91,7 +91,6 @@ class AlertService
         array $payload
     ): void {
         DB::transaction(function () use ($startup, $transactionId, $ruleCode, $message, $payload): void {
-            // Lock startup row to make duplicate check + create atomic for this startup.
             Startup::query()
                 ->whereKey($startup->id)
                 ->lockForUpdate()
