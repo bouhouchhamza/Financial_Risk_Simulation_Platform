@@ -247,7 +247,6 @@ window.Chart = Chart;
         });
     }
 
-    /* ── Simulation projection line chart ─────────────────────── */
     function initSimulationProjectionChart() {
         const canvas = byId('simulationProjectionChart');
         if (!canvas || !window.Chart) return;
